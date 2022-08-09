@@ -32,3 +32,6 @@ The executable file "SFTP-Client.bat" is present in the "\SftpProject\exec". By 
  5. Rachana Bolla
 
 ## References
+ 1. https://docs.python.org/3/library/unittest.html
+ 2. https://pysftp.readthedocs.io/en/release_0.2.9/
+ 3. https://www.pcwdld.com/how-to-access-sftp-server-in-python
