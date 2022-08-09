@@ -460,8 +460,10 @@ def connect(hname,user,passd):#connects to the remote server with given or saved
         print("Connection Error. Please connect again.")
         print("\n Exiting....")
         exit()
-try:
-    ask()
-except Exception as e:
-    print(f"Error occured:{e}. Please Try Again")
-    exit()
+        
+if __name__ == "__main__":
+    try:
+        ask()
+    except Exception as e:
+        print(f"Error occured:{e}. Please Try Again")
+        exit()
