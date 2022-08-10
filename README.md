@@ -13,16 +13,23 @@ This project was developed using
 The executable file "SFTP-Client.bat" is present in the "\SftpProject\exec". By double clicking it will start the execution.
 
 ## Basic Features
- 1. Login to remote SFTP Server.
- 2. Listing files and directories on both remote and SFTP Servers.
- 3. Getting a single and multiple files from the remote server.
- 4. Uploding a single and multiple files to the server.
- 5. Creating directory on the remote server.
- 6. Delete file from remote server.
- 7. Changing the permissions on remote server. 
- 8. Copy directories on the remote server.
- 9. Delete directories on the remote server.
- 10. Renaming the files on remote server and local machine.
+ 1. Log into remote ftp server
+ 2. List directories & files on remote server
+ 3. List directories & files on  local machine
+ 4. Getting file from remote server
+ 5. Getting multiple files from remote server
+ 6. Putting file onto remote server
+ 7. Putting multiple files on remote server
+ 8. Create directory on remote server
+ 9. Delete file from remote server
+10. Change permissions on remote server
+11. Copy directories on remote server
+12. Delete directories on remote server
+13. Rename file on remote server
+14. Rename file on local machine
+15. Log off from remote server
+16. Save connection information
+17. Use saved connection information to connect
 
 ## Team Members
  1. Chaitanya Boyapati
