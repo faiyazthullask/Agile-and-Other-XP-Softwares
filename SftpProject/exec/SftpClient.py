@@ -53,10 +53,12 @@ def putfiles(filepath, filesnames, sftpconn):
     for i in filesnames:#sends files one by one to the putfile() function
         if os.path.isfile(i) and os.path.exists(i):#verifies whether the files exist in local machine
             print(f"Uploading file:{i}")
-            if putfile(filepath,i,sftpconn):#confirms uploaded file on remote server
-               return True
+            sftpconn.put(filepath+"/"+i,confirm=True, preserve_mtime=False)#uploads the file to server
+            
+            if sftpconn.exists(i):#confirms the uploaded file on server
+                print("File Uploaded Successfully")
             else:
-                return False       
+                print("File Upload Failed")
         else:
             print(f"Filename you entered does not exists.\n Please try again")
            
@@ -164,12 +166,8 @@ def FileOptions(sftpconn):
                 files = input()
                 filepath = '.'
                 filesnames = files.split()#filenames are separated by " " and stored in a list
-                
-                for i in filesnames: #files are uploaded one by one into putfiles() function
-                    if putfiles(filepath, filesnames, sftpconn):#verfies whether file was uploaded successfully or not
-                        print("Files uploaded successfully")
-                    else:
-                        print("Files upload failed")
+                putfiles(filepath, filesnames, sftpconn) #verfies whether file was uploaded successfully or not
+                print("Files upload complete")
             
             if choice.lower() == "createdir":#creates a folder on remote server
                 print("Enter the name of the directory you want to create :")
