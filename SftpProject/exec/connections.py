@@ -27,47 +27,6 @@ def ask():
 
 
 """
-Author: Chaitanya Boyapati
-
-Below function will establish the connection to the SFTP server. 
-It has three parameters.
-1. hname - This indicate the hostname.
-2. user - This indicate the username.
-3. passd - This indicates the password.
-
-By using these three parameters, the code will establish the connection to the SFTP server using pysftp.Connection where pysftp is a friendly Python SFTP interface.
-"""
-def connect(hname,user,passd):
-    try:
-        print(f"Connceting to: {hname} with username:{user}")
-        sftpconn=pysftp.Connection(host=hname,username=user,password=passd)
-        print("Connected successfully", sftpconn)
-        sftpconn.cd(f'/u/{user}')
-        FileOptions(sftpconn)    
-    except Exception as e:
-        print("Connection Error. Please connect again.")
-        print(e)
-        print("\n Exiting....")
-        exit()
-    
-"""
-Author: Chaitanya Boyapati
-
-Below function is used to read the input from user. 
-The input includes hostname, username and password.
-"""
-def creds():
-    print("Enter the ftp server name :")
-    hname = input()
-    print("Enter your user name :")
-    user = input()
-    print("Enter your password :")
-    passd = getpass.getpass(stream=None)    
-    return hname,user,passd
-
-
-
-"""
 Author:Chaitanya Boyapati & Faiyazthulla Shaik
 Below function acts as a driver for selecting the options.
 """
