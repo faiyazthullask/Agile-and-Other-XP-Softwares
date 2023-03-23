@@ -26,7 +26,16 @@ options = ["Type help to print options",
 
 
 
+"""
+Author: Chaitanya Boyapati
 
+Below function prints the available options on console. 
+"""
+def displayOption():
+    print("\n*******************************************************************************************************************")
+    for option in options:
+        print(option)
+    print("*******************************************************************************************************************\n")
     
 
 
@@ -44,7 +53,23 @@ signal.signal(signal.SIGINT, signal_handle)
                 
 
 
+"""
+Author: Chaitanya Boyapati
 
+Below function is used to upload the file to the server.
+Input: Name of the file that needs to be uploaded.
+Output: Function returns true or false. True means successful upload and false means unsuccesful upload.
+"""
+def putfile(filepath,filename,sftpconn):
+    try:
+        sftpconn.put(filepath+"/"+filename,confirm=True, preserve_mtime=False)
+    except IOError as e:
+        return False
+        
+    if sftpconn.exists(filepath+"/"+filename):
+        return True
+    else:
+        return False
 
 
 
@@ -69,6 +94,14 @@ def putfiles(filepath, filesnames, sftpconn):
 
 
 
+"""
+Author: Chaitanya Boyapati
+
+Below function is used to change the permission on the file or directory.
+"""
+def add(up,gp,op):
+    print("assigning permissions")
+    return int(up+gp+op)
 
 
 
@@ -84,6 +117,22 @@ def toListDir(sftpconn):
 
 
 
+"""
+Author: Chaitanya Boyapati
+
+Below function is used to change the present working director.
+"""
+def toChangeDirectory(sftpconn):
+    print("Enter name of directory :")
+    working_dir = input()
+    print(working_dir)
+    try:    
+        if sftpconn.isdir(working_dir):
+            sftpconn.cwd(working_dir)
+        else:
+            print("The name of the directory you entered is incorrect. Please try again")
+    except Exception as e:
+            print("An error occured while changing directory:",e)
 
 
 
@@ -111,6 +160,20 @@ def getFileOnSftp(sftpconn):
 
 
 
+"""
+Author: Chaitanya Boyapati
+
+Below function is used to logout from the SFTP Server. 
+Input: 'y' or 'n'. y means logout from the server.
+"""
+def toLogout(sftpconn):
+    print("Are you sure to logout?(y/n)")
+    logout = input()
+    if logout == 'y':
+        sftpconn.close()
+        exit()
+    elif logout == 'n':
+        print("Selected No!!")
 
 
 """
@@ -134,6 +197,15 @@ def toDownloadMultipleFiles(sftpconn):
 
 
 
+"""
+Author: Chaitanya Boyapati
+
+Below function is used to print the folder names in the pwd of SFTP server. 
+"""
+def toListDirectories():
+    print("listingfiles and folders in current directory")
+    for paths in os.scandir(os.getcwd()):
+        print(paths.name)
 
 
 
@@ -155,7 +227,18 @@ def toUploadFile(sftpconn):
 
 
 
+"""
+Author: Chaitanya Boyapati
 
+Below function is used to upload multiple files at same time on to the SFTP Server.
+"""
+def toUploadMultipleFiles(sftpconn):
+    print("Enter the file names from the current directory with space")
+    files = input()
+    filepath = '.'
+    filesnames = files.split()
+    putfiles(filepath, filesnames, sftpconn)
+    print("Files upload complete")
 
 
 
@@ -181,6 +264,23 @@ def toCreateDirectory(sftpconn):
 
 
 
+"""
+Author: Chaitanya Boyapati
+
+Below function is used to delete a file from the SFTP Server.
+"""
+def toDeleteFile(sftpconn):
+    print("Enter file name to delete from server")
+    delfname = input()                
+    if sftpconn.isfile(delfname) and sftpconn.exists(delfname):
+        print("Deleting the file you entered...")
+        sftpconn.remove(delfname)
+        if sftpconn.exists(delfname):
+            print("Deleting file failed. Please try again")
+        else:
+            print("Deleted the file successfully")
+    else:
+        print(f"The file name you entered does not exist")
 
 
 
@@ -213,7 +313,27 @@ def toDeleteDir(sftpconn):
 
 
 
+"""
+Author: Chaitanya Boyapati
 
+Below function is used to rename the filename on the SFTP Server. 
+"""
+def toRenameFile(sftpconn):
+    print("Enter the filename you want to rename on the server")
+    renrfname= input()
+    if sftpconn.isfile(renrfname) and sftpconn.exists(renrfname):
+        print("Enter the new name you want for the file")
+        newrenrfname= input()
+        if sftpconn.isfile(newrenrfname) and sftpconn.exists(newrenrfname):
+            print("the new filename already exists")
+        else:
+            sftpconn.rename(renrfname, newrenrfname)
+            if sftpconn.isfile(newrenrfname) and sftpconn.exists(newrenrfname):
+                print("File renamed successfully") 
+            else:
+                print("File rename unsuccessful. Please try again")
+    else:
+        print("The filename you entered dooes not exist")
 
 
 
@@ -241,7 +361,28 @@ def toRenameOnLocal():
 
 
 
-              
+"""
+Author: Chaitanya Boyapati
+
+Below function is used to copy the files from one directory to another on a SFTP Server.
+"""
+def copyFiles(sftpconn):
+    print("Enter the directory you want to copy:")
+    remotesrc= input()
+    if sftpconn.isdir(remotesrc):
+        print("Enter the directory you want copy to:")
+        remotedest= input()
+        if sftpconn.exists(remotedest):
+            print(f"the directory you entered already exists.")
+        else:
+            print(f"Copy the directory {remotesrc} to {remotedest}")                        
+            comm = 'cp -R'+' '+remotesrc + ' ' +remotedest
+            try:
+                print(sftpconn.execute(comm))
+            except Exception as e:
+                print(f"There was an erroe while copying directories. {e} \n Please Try again")
+    else:
+        print("Enter the directory does not exist:")                
 
 
 
@@ -268,7 +409,28 @@ def savecon(hname,user,passd):
 
 
 
+"""
+Author: Chaitanya Boyapati
 
+Below function will check whether the savecon.log file exists or not. 
+If file exists, it will read the file and return the hostname, username and password.\
+If file doesn't exits, it will print the message on the console that the file doesn't exists.
+"""           
+def usesavecon(num):
+    if os.path.exists("savecon.log"):
+        savefile = os.path.join(os.getcwd(),"savecon.log")
+        save = open(savefile, "r")
+        credlines= save.readlines()
+        credline=credlines[-num:]
+        credi = dict(cred.rstrip("\n").split(':') for cred in credline)
+        hname=credi.get("host")
+        user=credi.get("username")
+        passd=credi.get("pass")
+        
+        return hname,user,passd 
+    else:
+        print("no previous connection information available")
+        creds()
 
 
 
@@ -289,3 +451,92 @@ def getfile(filename,sftpconn):
         return False
 
 
+"""
+Author: Chaitanya Boyapati
+
+Below function is used to change the permission of the folder or file.
+"""
+def toChangePermissions(sftpconn):
+    uperm =7
+    gperm =7
+    operm =7                
+    print("Enter the filename/foldername you want to change permissions")                
+    permfile = input()           
+    if sftpconn.isfile(permfile) or sftpconn.isdir(permfile) and sftpconn.exists(permfile):
+        print("Set user permissions to the file/folder by answering the following questions \n NOTE: by default the permissions are set to read,write and execute")                        
+        print("Do you want user to have read permissions? y/n")
+        uread = input().lower()
+        if uread == 'y':
+            perm=4
+        elif uread == 'n':
+            uperm = 0
+                        
+        print("Do you want user to have write permissions? y/n")
+        uwrite = input().lower()
+        if uwrite == 'y':
+            uperm = uperm+2
+        elif uwrite == 'n':
+            uperm = uperm+0
+                           
+        print("Do you want user to have execute permissions? y/n")
+        uexecute = input().lower()
+        if uexecute == 'y':
+            uperm = uperm+1
+        elif uexecute == 'n':
+            uperm =uperm+0
+                        
+        print(f"user permission chmod {permfile} is {uperm}")                        
+        print("Set group permissions to the file by answering the following questions \n NOTE: by default the permissions are set to read,write and execute")                        
+        print("Do you want group to have read permissions? y/n")
+        gread=input().lower()
+        if gread == 'y':
+            gperm=4
+        elif gread == 'n':
+            gperm = 0
+                        
+        print("Do you want group to have write permissions? y/n")
+        gwrite = input().lower()
+        if gwrite == 'y':
+            gperm = gperm+2
+        elif gwrite == 'n':
+            gperm = gperm+0
+                           
+        print("Do you want group to have execute permissions? y/n")
+        gexecute = input().lower()
+        if gexecute == 'y':
+            gperm = gperm+1
+        elif gexecute == 'n':
+            gperm =gperm+0                            
+                            
+        print("Set others permissions to the file by answering the following questions \n NOTE: by default the permissions are set to read,write and execute")
+        print("Do you want others to have read permissions? y/n")
+        oread =input().lower()
+        if oread == 'y':
+            operm=4
+        elif oread == 'n':
+            operm = 0
+                        
+        print("Do you want others to have write permissions? y/n")
+        owrite = input().lower()                        
+        if owrite == 'y':
+            operm = operm+2
+        elif owrite == 'n':
+            operm = operm+0
+                           
+        print("Do you want others to have execute permissions? y/n")
+        oexecute = input().lower()
+        if oexecute == 'y':
+            operm = operm+1
+        elif oexecute == 'n':
+            operm =operm+0
+                            
+        print("Changing file permissions as per permissions set above...")
+        finalmod = add(str(uperm),str(gperm), str(operm))
+        print(finalmod, type(finalmod))
+        try:
+            sftpconn.chmod(permfile, finalmod)
+            print("Changed file permissions successfully")
+        except IOError as e:
+            print("Error while assigning permissions. Verify if the file/folder still exists on the server")
+    else:
+        print("file/folder name you enetered does not exist. Please try again")
